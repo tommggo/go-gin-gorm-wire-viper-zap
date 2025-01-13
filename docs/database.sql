@@ -1,0 +1,22 @@
+CREATE TABLE `signal` (
+  `id` bigint NOT NULL AUTO_INCREMENT,
+  `asset_name` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `signal_code` char(10) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT '000',
+  `model_version` varchar(32) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `processed` tinyint(1) DEFAULT '0',
+  `signal_source` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'BA/Bitget',
+  `priority` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'HIGH/MEDIUM/LOW',
+  `kline` int DEFAULT NULL COMMENT '分钟',
+  `side` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'BUY/SELL',
+  `asset_type` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'SPOT/FUTURES',
+  `position_side` char(16) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL COMMENT 'BOTH(单一持仓方向)/LONG(多头)/SHORT(空头)',
+  `remark` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci DEFAULT NULL,
+  `created_at` datetime DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+  `updated_at` datetime DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_asset_name` (`asset_name`) USING BTREE,
+  KEY `idx_model_version` (`model_version`) USING BTREE,
+  KEY `idx_ processed` (`processed`) USING BTREE,
+  KEY `idx_asset_type` (`asset_type`) USING BTREE,
+  KEY `idx_created_at` (`created_at`) USING BTREE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

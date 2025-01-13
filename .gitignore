@@ -15,7 +15,13 @@
 *.out
 
 # Dependency directories (remove the comment below to include it)
-# vendor/
+/vendor/
+
+# IDE files
+.idea/
+.vscode/
+*.swp
+*.swo
 
 # Go workspace file
 go.work
@@ -23,3 +29,7 @@ go.work.sum
 
 # env file
 .env
+
+# Log files
+/logs/
+*.log

@@ -1,0 +1,27 @@
+# config.dev.yaml - 开发环境
+app:
+  name: "go-gin-gorm-wire-viper-zap"
+  version: "0.1.0"
+  env: "dev"
+
+server:
+  port: 8080
+  mode: debug
+  max_multipart_mem: 8388608  # 8MB
+  read_timeout: 10s
+  write_timeout: 10s
+  max_header_bytes: 1048576   # 1MB
+
+database:
+  dsn: ${APP_DATABASE_DSN}
+  max_open_conns: 100
+  max_idle_conns: 10
+  conn_max_lifetime: 3600s
+
+log:
+  level: "debug"
+  filename: "logs/app.log"
+  max_size: 100
+  max_backups: 30
+  max_age: 30
+  compress: true
