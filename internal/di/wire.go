@@ -4,7 +4,6 @@
 package di
 
 import (
-	"go-gin-gorm-wire-viper-zap/internal/api"
 	"go-gin-gorm-wire-viper-zap/internal/config"
 	"go-gin-gorm-wire-viper-zap/internal/di/provider"
 	"go-gin-gorm-wire-viper-zap/pkg/database"
@@ -15,9 +14,8 @@ import (
 
 // Container 包含所有依赖
 type Container struct {
-	Server    *http.Server
-	DB        database.DB
-	SignalAPI *api.SignalAPI
+	Server *http.Server
+	DB     database.DB
 }
 
 // InitializeServer 初始化服务器和所有依赖

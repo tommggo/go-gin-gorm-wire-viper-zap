@@ -3,6 +3,7 @@ package provider
 import (
 	"go-gin-gorm-wire-viper-zap/internal/api"
 	"go-gin-gorm-wire-viper-zap/internal/repository"
+	"go-gin-gorm-wire-viper-zap/internal/router"
 	"go-gin-gorm-wire-viper-zap/internal/service"
 	"go-gin-gorm-wire-viper-zap/pkg/database"
 	"go-gin-gorm-wire-viper-zap/pkg/http"
@@ -18,6 +19,11 @@ var DBProvider = wire.NewSet(
 // ServerProvider HTTP 服务器依赖
 var ServerProvider = wire.NewSet(
 	http.NewServer,
+)
+
+// RouterProvider 路由依赖
+var RouterProvider = wire.NewSet(
+	router.NewRouter,
 )
 
 // RepositoryProvider Repository 层依赖
@@ -44,4 +50,5 @@ var ProviderSet = wire.NewSet(
 	RepositoryProvider,
 	ServiceProvider,
 	APIProvider,
+	RouterProvider,
 )

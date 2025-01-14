@@ -1,12 +1,14 @@
-package api
+package router
 
 import (
+	"net/http"
+
 	"github.com/gin-gonic/gin"
 )
 
 // HealthCheck 健康检查
 func HealthCheck(c *gin.Context) {
-	Success(c, map[string]string{
+	c.JSON(http.StatusOK, map[string]string{
 		"status":  "ok",
 		"message": "service is running",
 	})

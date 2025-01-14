@@ -10,6 +10,7 @@ import (
 	"go-gin-gorm-wire-viper-zap/internal/api"
 	"go-gin-gorm-wire-viper-zap/internal/config"
 	"go-gin-gorm-wire-viper-zap/internal/repository"
+	"go-gin-gorm-wire-viper-zap/internal/router"
 	"go-gin-gorm-wire-viper-zap/internal/service"
 	"go-gin-gorm-wire-viper-zap/pkg/database"
 	"go-gin-gorm-wire-viper-zap/pkg/http"
@@ -19,7 +20,6 @@ import (
 
 // InitializeServer 初始化服务器和所有依赖
 func InitializeServer(cfg *config.Config) (*Container, error) {
-	server := http.NewServer(cfg)
 	db, err := database.NewDB(cfg)
 	if err != nil {
 		return nil, err
@@ -27,10 +27,11 @@ func InitializeServer(cfg *config.Config) (*Container, error) {
 	signalRepositoryImpl := repository.NewSignalRepository(db)
 	signalServiceImpl := service.NewSignalService(signalRepositoryImpl)
 	signalAPI := api.NewSignalAPI(signalServiceImpl)
+	routerRouter := router.NewRouter(signalAPI)
+	server := http.NewServer(cfg, routerRouter)
 	container := &Container{
-		Server:    server,
-		DB:        db,
-		SignalAPI: signalAPI,
+		Server: server,
+		DB:     db,
 	}
 	return container, nil
 }
@@ -39,7 +40,6 @@ func InitializeServer(cfg *config.Config) (*Container, error) {
 
 // Container 包含所有依赖
 type Container struct {
-	Server    *http.Server
-	DB        database.DB
-	SignalAPI *api.SignalAPI
+	Server *http.Server
+	DB     database.DB
 }

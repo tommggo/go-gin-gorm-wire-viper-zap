@@ -1,7 +1,6 @@
 package main
 
 import (
-	"go-gin-gorm-wire-viper-zap/internal/api"
 	"go-gin-gorm-wire-viper-zap/internal/config"
 	"go-gin-gorm-wire-viper-zap/internal/di"
 	"go-gin-gorm-wire-viper-zap/pkg/logger"
@@ -35,9 +34,6 @@ func main() {
 		}
 		logger.Info("server exited")
 	}()
-
-	// 注册路由
-	api.RegisterRoutes(container.Server.Engine(), container.SignalAPI)
 
 	// 4. 优雅关闭处理
 	quit := make(chan os.Signal, 1)

@@ -9,6 +9,7 @@ import (
 	"github.com/gin-gonic/gin"
 
 	"go-gin-gorm-wire-viper-zap/internal/config"
+	"go-gin-gorm-wire-viper-zap/internal/router"
 	"go-gin-gorm-wire-viper-zap/pkg/http/middleware"
 	"go-gin-gorm-wire-viper-zap/pkg/logger"
 )
@@ -22,10 +23,11 @@ type Server struct {
 }
 
 // NewServer 创建 HTTP 服务器
-func NewServer(cfg *config.Config) *Server {
+func NewServer(cfg *config.Config, router *router.Router) *Server {
 	// 设置 gin mode
 	gin.SetMode(cfg.Server.Mode)
 
+	// 创建 gin 引擎
 	engine := gin.New()
 
 	// 基础配置
@@ -33,7 +35,7 @@ func NewServer(cfg *config.Config) *Server {
 	engine.UseRawPath = true
 	engine.UnescapePathValues = false
 
-	// 信任所有代理
+	// 配置信任的代理
 	engine.SetTrustedProxies(nil)
 
 	// 使用自定义的日志中间件和恢复中间件
@@ -41,6 +43,9 @@ func NewServer(cfg *config.Config) *Server {
 		middleware.Logger(),
 		middleware.ErrorHandler(),
 	)
+
+	// 注册路由
+	router.Register(engine)
 
 	// 创建 HTTP 服务器
 	srv := &http.Server{
