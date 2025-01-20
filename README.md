@@ -9,9 +9,18 @@ A Go web project template integrating mainstream frameworks and best practices.
 - 🔧 Dependency injection using [Wire](https://github.com/google/wire)
 - ⚙️ Configuration management with [Viper](https://github.com/spf13/viper)
 - 📝 Logging with [Zap](https://github.com/uber-go/zap)
+- 💾 Caching with Redis
+- ⏰ Task scheduling with [Cron](https://github.com/robfig/cron)
+  - Distributed lock support
+  - Automatic logging
+  - Job interface abstraction
+  - Graceful start/stop
 - 🔐 Separated configurations for development and production
 - 📚 Standard Go project layout
 - 🎯 Unified error handling and response format
+- 🔄 Graceful shutdown support
+- 📊 Built-in health check
+- 🛠️ Rich utility packages
 
 ## Getting Started
 
@@ -19,6 +28,7 @@ A Go web project template integrating mainstream frameworks and best practices.
 
 - Go 1.20 or higher
 - MySQL 8.0 or higher
+- Redis 6.0 or higher
 - Wire: `go install github.com/google/wire/cmd/wire@latest`
 
 ### Installation
@@ -75,9 +85,31 @@ For detailed project structure and documentation, please refer to [Framework Doc
 ### Adding New API
 
 1. Add new handler in `internal/api`
-2. Register route in `internal/api/router.go`
+2. Register route in `internal/router/router.go`
 3. Implement business logic in `internal/service`
 4. Implement data access in `internal/repository`
+5. Add necessary models in `internal/model`
+
+### Adding New Cron Job
+
+1. Implement the Job interface in `internal/cron/jobs`:
+```go
+type Job interface {
+    Run(ctx context.Context) error
+}
+```
+
+2. Register the job in cron manager with cron expression:
+```go
+// Support cron expressions like: "*/5 * * * *" (every 5 minutes)
+// See https://pkg.go.dev/github.com/robfig/cron/v3 for expression format
+cron.AddJob("job-name", "*/5 * * * *", job)
+```
+
+3. Jobs will automatically:
+   - Use distributed locks to prevent concurrent execution
+   - Log execution details (start/end time, duration, errors)
+   - Handle panic recovery
 
 ### Error Handling
 
@@ -93,6 +125,17 @@ import "go-gin-gorm-wire-viper-zap/pkg/logger"
 // Examples
 logger.Info("message", logger.String("key", "value"))
 logger.Error("error message", logger.Err(err))
+```
+
+### Caching
+
+```go
+import "go-gin-gorm-wire-viper-zap/pkg/cache"
+
+// Examples
+cache.Set(ctx, key, value)
+cache.SetEX(ctx, key, value, expiration)
+cache.SetNX(ctx, key, value, expiration) // For distributed locks
 ```
 
 ## Deployment
