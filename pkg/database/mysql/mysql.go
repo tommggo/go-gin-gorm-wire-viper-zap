@@ -1,4 +1,4 @@
-package database
+package mysql
 
 import (
 	"database/sql"
@@ -10,32 +10,18 @@ import (
 	gormlogger "gorm.io/gorm/logger"
 
 	"go-gin-gorm-wire-viper-zap/internal/config"
+	"go-gin-gorm-wire-viper-zap/pkg/database"
 	"go-gin-gorm-wire-viper-zap/pkg/logger"
 )
 
-// DB 接口定义数据库操作
-type DB interface {
-	GetDB() *gorm.DB
-	Close() error
-}
-
-// GormDB 实现 DB 接口
+// GormDB MySQL的具体实现
 type GormDB struct {
 	db    *gorm.DB
 	sqlDB *sql.DB
 }
 
-// NewDB 创建数据库连接
-func NewDB(cfg *config.Config) (DB, error) {
-	db, err := initDB(cfg)
-	if err != nil {
-		return nil, fmt.Errorf("init database failed: %v", err)
-	}
-	return db, nil
-}
-
-// initDB 内部初始化函数
-func initDB(cfg *config.Config) (*GormDB, error) {
+// New 创建MySQL连接
+func New(cfg *config.Config) (database.DB, error) {
 	// 1. 配置 GORM
 	gormConfig := &gorm.Config{
 		Logger: gormlogger.New(

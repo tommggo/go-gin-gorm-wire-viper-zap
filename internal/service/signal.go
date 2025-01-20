@@ -3,6 +3,7 @@ package service
 import (
 	"context"
 	"errors"
+	"fmt"
 	"go-gin-gorm-wire-viper-zap/internal/model"
 	"go-gin-gorm-wire-viper-zap/internal/repository"
 )
@@ -13,13 +14,14 @@ type SignalService interface {
 	Get(ctx context.Context, id uint64) (*model.Signal, error)
 	// 业务方法
 	ProcessSignal(ctx context.Context, id uint64) error
+	Test(ctx context.Context) error
 }
 
 type SignalServiceImpl struct {
 	signalRepo repository.SignalRepository
 }
 
-func NewSignalService(signalRepo repository.SignalRepository) *SignalServiceImpl {
+func NewSignalService(signalRepo repository.SignalRepository) SignalService {
 	return &SignalServiceImpl{signalRepo: signalRepo}
 }
 
@@ -48,4 +50,9 @@ func (s *SignalServiceImpl) ProcessSignal(ctx context.Context, id uint64) error 
 	signal.Processed = true
 
 	return s.signalRepo.Update(ctx, signal)
+}
+
+func (s *SignalServiceImpl) Test(ctx context.Context) error {
+	fmt.Println("job test")
+	return nil
 }

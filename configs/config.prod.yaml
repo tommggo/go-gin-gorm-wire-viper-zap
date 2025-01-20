@@ -13,7 +13,7 @@ server:
   max_header_bytes: 1048576   # 1MB
 
 database:
-  dsn: ${APP_DATABASE_DSN}
+  dsn: ""
   max_open_conns: 100
   max_idle_conns: 10
   conn_max_lifetime: 3600s
@@ -25,3 +25,15 @@ log:
   max_backups: 30
   max_age: 30
   compress: true
+
+redis:
+  addr: "localhost:6379"
+  password: ""
+  db: 0
+  max_open_conns: 100
+  max_idle_conns: 10
+  conn_max_lifetime: 3600s
+
+cron:
+  specs:
+    signal_test: "0 */5 * * * *"  # 每5分钟执行一次 (秒 分 时 日 月 星期)

@@ -1,54 +1,51 @@
 package provider
 
 import (
-	"go-gin-gorm-wire-viper-zap/internal/api"
+	"go-gin-gorm-wire-viper-zap/internal/cron"
 	"go-gin-gorm-wire-viper-zap/internal/repository"
 	"go-gin-gorm-wire-viper-zap/internal/router"
 	"go-gin-gorm-wire-viper-zap/internal/service"
-	"go-gin-gorm-wire-viper-zap/pkg/database"
+	"go-gin-gorm-wire-viper-zap/pkg/cache/redis"
+	pkgcron "go-gin-gorm-wire-viper-zap/pkg/cron"
+	"go-gin-gorm-wire-viper-zap/pkg/database/mysql"
 	"go-gin-gorm-wire-viper-zap/pkg/http"
 
 	"github.com/google/wire"
 )
 
-// DBProvider 数据库相关依赖
-var DBProvider = wire.NewSet(
-	database.NewDB,
-)
-
-// ServerProvider HTTP 服务器依赖
-var ServerProvider = wire.NewSet(
+// InfraProvider 基础设施依赖
+var InfraProvider = wire.NewSet(
+	mysql.New,
+	redis.New,
 	http.NewServer,
 )
 
-// RouterProvider 路由依赖
-var RouterProvider = wire.NewSet(
+// RepositoryProvider 数据访问层依赖
+var RepositoryProvider = wire.NewSet(
+	repository.NewSignalRepository,
+)
+
+// ServiceProvider 业务服务层依赖
+var ServiceProvider = wire.NewSet(
+	service.NewSignalService,
+)
+
+// HandlerProvider Web处理层依赖
+var HandlerProvider = wire.NewSet(
 	router.NewRouter,
 )
 
-// RepositoryProvider Repository 层依赖
-var RepositoryProvider = wire.NewSet(
-	repository.NewSignalRepository,
-	wire.Bind(new(repository.SignalRepository), new(*repository.SignalRepositoryImpl)),
-)
-
-// ServiceProvider Service 层依赖
-var ServiceProvider = wire.NewSet(
-	service.NewSignalService,
-	wire.Bind(new(service.SignalService), new(*service.SignalServiceImpl)),
-)
-
-// APIProvider API 层依赖
-var APIProvider = wire.NewSet(
-	api.NewSignalAPI,
+// TaskProvider 任务模块依赖
+var TaskProvider = wire.NewSet(
+	cron.NewCronManager,
+	pkgcron.New,
 )
 
 // ProviderSet 整合所有依赖
 var ProviderSet = wire.NewSet(
-	DBProvider,
-	ServerProvider,
+	InfraProvider,
 	RepositoryProvider,
 	ServiceProvider,
-	APIProvider,
-	RouterProvider,
+	HandlerProvider,
+	TaskProvider,
 )

@@ -65,6 +65,7 @@ var (
 	Err      = zap.Error
 	Any      = zap.Any
 	Duration = zap.Duration
+	Time     = zap.Time
 )
 
 // Setup 初始化日志

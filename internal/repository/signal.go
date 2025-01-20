@@ -18,7 +18,7 @@ type SignalRepositoryImpl struct {
 	*BaseRepository[model.Signal]
 }
 
-func NewSignalRepository(db database.DB) *SignalRepositoryImpl {
+func NewSignalRepository(db database.DB) SignalRepository {
 	return &SignalRepositoryImpl{
 		BaseRepository: NewBaseRepository(db, &model.Signal{}),
 	}

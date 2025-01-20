@@ -8,6 +8,8 @@ type Config struct {
 	Server   ServerConfig   `mapstructure:"server"`
 	Database DatabaseConfig `mapstructure:"database"`
 	Log      LogConfig      `mapstructure:"log"`
+	Redis    RedisConfig    `mapstructure:"redis"`
+	Cron     CronConfig     `mapstructure:"cron"`
 }
 
 // AppConfig 应用配置
@@ -43,4 +45,19 @@ type LogConfig struct {
 	MaxBackups int    `mapstructure:"max_backups"` // 保留旧文件最大个数
 	MaxAge     int    `mapstructure:"max_age"`     // 保留旧文件最大天数
 	Compress   bool   `mapstructure:"compress"`    // 是否压缩
+}
+
+// RedisConfig Redis配置
+type RedisConfig struct {
+	Addr            string        `mapstructure:"addr"`              // Redis地址
+	Password        string        `mapstructure:"password"`          // 密码
+	DB              int           `mapstructure:"db"`                // 数据库编号
+	MaxOpenConns    int           `mapstructure:"max_open_conns"`    // 最大连接数
+	MaxIdleConns    int           `mapstructure:"max_idle_conns"`    // 最大空闲连接数
+	ConnMaxLifetime time.Duration `mapstructure:"conn_max_lifetime"` // 连接最大生命周期
+}
+
+// CronConfig 定时任务配置
+type CronConfig struct {
+	Specs map[string]string `mapstructure:"specs"` // 定时任务配置
 }
